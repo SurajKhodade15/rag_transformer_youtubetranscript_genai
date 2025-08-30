@@ -85,12 +85,16 @@ st.markdown("""
 class AttentionRAGApp:
     def __init__(self):
         self.initialize_environment()
-        self.setup_models()
         self.video_id = "bCz4OMemCcA"
         self.pdf_path = "Attention.pdf"
         self.vector_store = None
         self.retriever = None
         self.main_chain = None
+        self.llm = None
+        self.embeddings = None
+        
+        # Initialize models - this will set llm and embeddings
+        self.models_initialized = self.setup_models()
         
     def initialize_environment(self):
         """Initialize environment variables for LangChain and APIs"""
@@ -114,10 +118,14 @@ class AttentionRAGApp:
             # Use OpenAI embeddings for better semantic understanding
             self.embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
             
+            return True
+            
         except Exception as e:
             st.error(f"Error setting up models: {str(e)}")
+            # Set default values to prevent attribute errors
+            self.llm = None
+            self.embeddings = None
             return False
-        return True
     
     def load_youtube_transcript(self) -> str:
         """Load and return YouTube transcript"""
@@ -170,6 +178,11 @@ class AttentionRAGApp:
     def create_vector_store(self, youtube_content: str, pdf_content: str):
         """Create FAISS vector store from combined content"""
         try:
+            # Check if models are properly initialized
+            if not self.models_initialized or self.embeddings is None:
+                st.error("Models not properly initialized. Please check your API keys and try again.")
+                return False
+                
             with st.spinner("Creating vector embeddings..."):
                 # Combine content with source labels
                 combined_content = f"""
@@ -206,6 +219,11 @@ class AttentionRAGApp:
     def setup_rag_chain(self):
         """Setup the RAG chain for question answering"""
         try:
+            # Check if models are properly initialized
+            if not self.models_initialized or self.llm is None or self.retriever is None:
+                st.error("Models or retriever not properly initialized. Please initialize the RAG system first.")
+                return False
+                
             # Define prompt template
             prompt = PromptTemplate(
                 template="""
@@ -300,6 +318,12 @@ def main():
         # Initialize system
         if st.button("🚀 Initialize RAG System", type="primary"):
             with st.spinner("Initializing RAG system..."):
+                # Check if models are properly initialized
+                if not app.models_initialized:
+                    st.error("❌ Models failed to initialize. Please check your API keys and try again.")
+                    st.error("Make sure you have set OPENAI_API_KEY and GROQ_API_KEY in your .env file.")
+                    return
+                
                 # Load content
                 youtube_content = app.load_youtube_transcript()
                 pdf_content = app.load_pdf_content()
@@ -319,6 +343,12 @@ def main():
                     st.error("❌ Failed to load content")
         
         # Show status
+        if app.models_initialized:
+            st.success("✅ Models Loaded")
+        else:
+            st.error("❌ Models Failed")
+            st.error("Check API keys in .env file")
+            
         if st.session_state.initialized:
             st.success("✅ System Ready")
         else:
