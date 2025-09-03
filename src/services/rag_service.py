@@ -37,6 +37,7 @@ class RAGService(LoggerMixin):
         try:
             self.logger.info("Initializing Groq LLM")
             self.llm = ChatGroq(
+                groq_api_key=settings.api.groq_api_key,
                 model=settings.api.groq_model,
                 temperature=settings.api.groq_temperature,
                 max_tokens=settings.api.groq_max_tokens,

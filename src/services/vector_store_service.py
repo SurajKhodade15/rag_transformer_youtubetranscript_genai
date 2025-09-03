@@ -37,6 +37,7 @@ class VectorStoreService(LoggerMixin):
         try:
             self.logger.info("Initializing OpenAI embeddings")
             self.embeddings = OpenAIEmbeddings(
+                openai_api_key=settings.api.openai_api_key,
                 model=settings.api.openai_embedding_model,
                 max_retries=settings.api.openai_max_retries
             )

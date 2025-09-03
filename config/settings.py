@@ -5,7 +5,8 @@ Industry-standard configuration management with environment variables.
 
 import os
 from typing import Optional, List
-from pydantic import BaseSettings, Field, validator
+from pydantic import Field, validator
+from pydantic_settings import BaseSettings
 from pathlib import Path
 
 
@@ -29,9 +30,13 @@ class APISettings(BaseSettings):
     langchain_tracing_v2: bool = Field(default=False, env="LANGCHAIN_TRACING_V2")
     langchain_endpoint: str = Field(default="https://api.smith.langchain.com", env="LANGCHAIN_ENDPOINT")
     
+    # HuggingFace Configuration (Optional)
+    hf_token: Optional[str] = Field(default=None, env="HF_TOKEN")
+    
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra fields from environment
 
 
 class RAGSettings(BaseSettings):
@@ -56,6 +61,7 @@ class RAGSettings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra fields from environment
 
 
 class AppSettings(BaseSettings):
@@ -103,6 +109,7 @@ class AppSettings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra fields from environment
 
 
 class DatabaseSettings(BaseSettings):
@@ -120,6 +127,7 @@ class DatabaseSettings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = False
+        extra = "ignore"  # Ignore extra fields from environment
 
 
 class Settings:
