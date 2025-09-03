@@ -1,6 +1,6 @@
 # 🔍 Attention Mechanism RAG Assistant
 
-A sophisticated Retrieval-Augmented Generation (RAG) application that provides intelligent answers about the groundbreaking "Attention Is All You Need" paper using both YouTube video explanations and the original research paper.
+A sophisticated, **production-ready** Retrieval-Augmented Generation (RAG) application that provides intelligent answers about the groundbreaking "Attention Is All You Need" paper using both YouTube video explanations and the original research paper.
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-121212?style=for-the-badge&logo=chainlink&logoColor=white)
@@ -16,18 +16,63 @@ A sophisticated Retrieval-Augmented Generation (RAG) application that provides i
 - **Semantic Search**: Uses OpenAI embeddings with FAISS vector database for accurate retrieval
 - **Rich UI**: Beautiful, responsive Streamlit interface with custom styling
 
+### 🏭 Production Features
+- **Industry-Standard Architecture**: Clean separation of concerns with service-oriented design
+- **Comprehensive Error Handling**: Custom exception hierarchy with user-friendly messages
+- **Performance Monitoring**: Built-in metrics collection and health checks
+- **Caching System**: Multi-layer caching (Memory/Redis) for optimal performance
+- **Structured Logging**: JSON logging with performance metrics and debugging support
+- **Configuration Management**: Type-safe settings with Pydantic validation
+- **Test Coverage**: Comprehensive test suite with fixtures and mocks
+- **Documentation**: Complete API docs, deployment guides, and architecture overview
+
 ### 📚 Knowledge Sources
 1. **YouTube Video**: Technical explanation of the Attention paper (ID: bCz4OMemCcA)
 2. **Research Paper**: Original "Attention Is All You Need" PDF document
 3. **Comprehensive Coverage**: Architecture details, self-attention, multi-head attention, positional encoding
 
 ### 🔧 Technical Stack
-- **Frontend**: Streamlit with custom CSS styling
+- **Frontend**: Streamlit with custom CSS styling and component architecture
 - **LLM**: Groq Llama 3.3 70B for fast, accurate responses
 - **Embeddings**: OpenAI text-embedding-3-small for semantic understanding
 - **Vector Database**: FAISS for efficient similarity search
 - **Framework**: LangChain for RAG pipeline orchestration
 - **Document Processing**: PyPDF for PDF parsing, YouTube Transcript API
+- **Caching**: Redis/Memory caching with TTL support
+- **Monitoring**: Performance metrics, health checks, and system monitoring
+- **Testing**: Pytest with comprehensive fixtures and mocks
+
+## 🏗️ Architecture
+
+### Directory Structure
+```
+├── src/                          # Source code
+│   ├── core/                     # Core utilities and exceptions
+│   ├── services/                 # Business logic services
+│   ├── ui/                       # User interface components
+│   └── utils/                    # Utility modules (logging, caching, monitoring)
+├── config/                       # Configuration management
+├── tests/                        # Comprehensive test suite
+├── docs/                         # Documentation
+├── logs/                         # Application logs
+├── data/                         # Data storage and vector store
+├── main.py                       # Application entry point
+└── requirements.txt              # Dependencies
+```
+
+### Service Architecture
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Streamlit UI  │───▶│   RAG Service    │───▶│  Vector Store   │
+│    (main.py)    │    │  (Orchestrator)  │    │    Service      │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                        │                       │
+         ▼                        ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│  UI Components  │    │    Services      │    │   Data Sources  │
+│   & Theming     │    │  YouTube | PDF   │    │  YouTube | PDF  │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
 
 ## 🚀 Quick Start
 
@@ -40,18 +85,16 @@ A sophisticated Retrieval-Augmented Generation (RAG) application that provides i
 
 1. **Clone the repository**
    ```bash
-   git clone <your-repo-url>
+   git clone <repository-url>
    cd rag_transformer_youtubetranscript_genai
    ```
 
 2. **Create virtual environment**
    ```bash
    python -m venv venv
-   
-   # On Windows
+   # Windows
    venv\Scripts\activate
-   
-   # On macOS/Linux
+   # macOS/Linux
    source venv/bin/activate
    ```
 
@@ -61,27 +104,29 @@ A sophisticated Retrieval-Augmented Generation (RAG) application that provides i
    ```
 
 4. **Set up environment variables**
-   
-   Create a `.env` file in the root directory:
-   ```env
+   Create a `.env` file:
+   ```bash
    # Required API Keys
    OPENAI_API_KEY=your_openai_api_key_here
    GROQ_API_KEY=your_groq_api_key_here
    
-   # Optional: LangChain Tracing (for debugging)
-   LANGCHAIN_API_KEY=your_langchain_api_key
+   # Optional (for debugging)
+   LANGCHAIN_API_KEY=your_langchain_api_key_here
    LANGCHAIN_PROJECT=your_project_name
    LANGCHAIN_TRACING_V2=true
-   LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+   
+   # Application Settings
+   ENVIRONMENT=development
+   DEBUG=true
+   LOG_LEVEL=INFO
    ```
 
 5. **Run the application**
    ```bash
-   streamlit run app.py
+   streamlit run main.py
    ```
 
 6. **Access the app**
-   
    Open your browser and navigate to `http://localhost:8501`
 
 ## 📖 How to Use
@@ -100,272 +145,192 @@ A sophisticated Retrieval-Augmented Generation (RAG) application that provides i
 - "What is positional encoding and why is it needed?"
 - "What were the main results and achievements of this paper?"
 
-### Features Overview
-- **Paper Summary**: Expandable section with key insights about the Attention paper
-- **Chat Interface**: Conversational Q&A with chat history
-- **System Status**: Real-time status indicators in the sidebar
-- **Quick Info**: Technical specifications and metrics
-- **Example Questions**: Pre-defined questions to get started
+## 🧪 Testing
 
-## 🏗️ Architecture
+Run the comprehensive test suite:
 
-### RAG Pipeline
-```
-User Question → Embedding → Vector Search → Context Retrieval → LLM → Response
-```
+```bash
+# Run all tests
+pytest
 
-### Components
-1. **Document Ingestion**: Loads YouTube transcript and PDF content
-2. **Text Splitting**: Chunks content with overlap for better context
-3. **Embedding**: Converts text to vectors using OpenAI embeddings
-4. **Vector Store**: FAISS database for fast similarity search
-5. **Retrieval**: Finds most relevant context for user questions
-6. **Generation**: Groq LLM generates comprehensive answers
+# Run with coverage
+pytest --cov=src
 
-### Data Flow
-```mermaid
-graph TD
-    A[YouTube API] --> C[Text Splitter]
-    B[PDF Loader] --> C
-    C --> D[OpenAI Embeddings]
-    D --> E[FAISS Vector Store]
-    F[User Question] --> G[Embedding]
-    G --> E
-    E --> H[Context Retrieval]
-    H --> I[Groq LLM]
-    I --> J[Response]
+# Run specific test file
+pytest tests/test_youtube_service.py
+
+# Run with verbose output
+pytest -v
 ```
 
-## 🔑 API Keys Setup
+## 📊 Monitoring
 
-### OpenAI API Key
-1. Visit [OpenAI Platform](https://platform.openai.com/)
-2. Sign up or log in to your account
-3. Navigate to API Keys section
-4. Create a new secret key
-5. Add to your `.env` file
+### Health Checks
+The application includes built-in health checks:
+- System resource monitoring
+- API connectivity checks
+- Service availability status
 
-### Groq API Key
-1. Visit [Groq Console](https://console.groq.com/)
-2. Sign up for an account
-3. Generate an API key
-4. Add to your `.env` file
+### Performance Metrics
+- Query execution times
+- Cache hit/miss ratios
+- System resource usage
+- API response times
 
-### LangChain (Optional)
-1. Visit [LangSmith](https://smith.langchain.com/)
-2. Create an account and project
-3. Get your API key
-4. Add to your `.env` file for debugging/tracing
+### Logging
+- Structured JSON logging for production
+- Performance metrics logging
+- Error tracking and debugging
+
+## 🚀 Deployment
+
+### Development
+```bash
+streamlit run main.py
+```
+
+### Production Options
+- **Streamlit Cloud**: Easy deployment with GitHub integration
+- **Docker**: Containerized deployment with Redis caching
+- **AWS EC2**: Scalable cloud deployment
+- **Heroku**: Simple platform-as-a-service deployment
+
+See [Deployment Guide](docs/deployment.md) for detailed instructions.
+
+## 🔧 Configuration
+
+### Environment Variables
+```bash
+# Core Settings
+ENVIRONMENT=development|staging|production
+DEBUG=true|false
+LOG_LEVEL=DEBUG|INFO|WARNING|ERROR
+
+# RAG Configuration
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+SIMILARITY_SEARCH_K=4
+
+# Caching
+CACHE_ENABLED=true
+CACHE_TYPE=memory|redis
+CACHE_TTL=3600
+
+# Performance
+MAX_CONCURRENT_REQUESTS=10
+REQUEST_TIMEOUT=30
+```
 
 ## 📁 Project Structure
 
 ```
 rag_transformer_youtubetranscript_genai/
-├── app.py                          # Main Streamlit application
-├── requirements.txt                # Python dependencies
-├── .env                           # Environment variables (create this)
-├── .gitignore                     # Git ignore file
-├── README.md                      # This file
-├── Attention.pdf                  # Research paper PDF
-└── rag_using_langchain.ipynb     # Development notebook
+├── src/
+│   ├── core/
+│   │   ├── __init__.py
+│   │   └── exceptions.py              # Custom exception classes
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── youtube_service.py         # YouTube transcript handling
+│   │   ├── pdf_service.py             # PDF document processing
+│   │   ├── vector_store_service.py    # Vector database operations
+│   │   └── rag_service.py             # Main RAG orchestration
+│   ├── ui/
+│   │   ├── __init__.py
+│   │   └── components.py              # Streamlit UI components
+│   └── utils/
+│       ├── __init__.py
+│       ├── logging_config.py          # Structured logging
+│       ├── cache.py                   # Caching mechanisms
+│       └── monitoring.py              # Performance monitoring
+├── config/
+│   ├── __init__.py
+│   └── settings.py                    # Pydantic configuration
+├── tests/
+│   ├── conftest.py                    # Test configuration
+│   └── test_*.py                      # Test modules
+├── docs/
+│   ├── architecture.md               # Architecture overview
+│   └── deployment.md                 # Deployment guide
+├── logs/                             # Application logs
+├── data/                             # Data storage
+│   └── vector_store/                 # Vector database files
+├── main.py                           # Application entry point
+├── requirements.txt                  # Dependencies
+├── .env                             # Environment variables
+├── .gitignore                       # Git ignore rules
+└── README.md                        # This file
 ```
 
 ## 🎨 Customization
 
-### Styling
-The app uses custom CSS for enhanced UI. Modify the CSS in `app.py` to change:
-- Color schemes
-- Layout spacing
-- Component styling
-- Typography
-
 ### Model Configuration
-Easily switch models by modifying the `setup_models()` method:
 ```python
-# Change LLM model
-self.llm = ChatGroq(
-    model="llama-3.1-8b-instant",  # Faster alternative, or use llama-3.3-70b-versatile for current production
-    temperature=0.1,
-    max_tokens=500
-)
+# Change LLM model in config/settings.py
+GROQ_MODEL=llama-3.1-8b-instant  # Faster alternative
 
 # Change embedding model
-self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
+OPENAI_EMBEDDING_MODEL=text-embedding-ada-002
 ```
 
-### Retrieval Parameters
-Adjust retrieval settings in `create_vector_store()`:
-```python
-# Change chunk size and overlap
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,    # Smaller chunks
-    chunk_overlap=100  # Less overlap
-)
+### UI Customization
+Modify `src/ui/components.py` to change:
+- Color schemes and themes
+- Layout and spacing
+- Component behavior
+- Custom styling
 
-# Change retrieval parameters
-self.retriever = self.vector_store.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 6}  # Retrieve more documents
-)
-```
+### Performance Tuning
+Adjust settings in `config/settings.py`:
+- Chunk size and overlap
+- Similarity search parameters
+- Cache TTL and strategies
+- Concurrent request limits
 
-## 🚀 Deployment
+## 🔑 API Keys Setup
 
-### Streamlit Cloud
-1. Push your code to GitHub
-2. Visit [Streamlit Cloud](https://streamlit.io/cloud)
-3. Connect your GitHub repository
-4. Set environment variables in the dashboard
-5. Deploy with one click
+### OpenAI API Key
+1. Visit [OpenAI Platform](https://platform.openai.com/)
+2. Create account and generate API key
+3. Add to `.env` file
 
-### Local Deployment
-```bash
-# Install additional production dependencies
-pip install gunicorn
+### Groq API Key
+1. Visit [Groq Console](https://console.groq.com/)
+2. Sign up and generate API key
+3. Add to `.env` file
 
-# Run with custom port
-streamlit run app.py --server.port 8080
-```
-
-### Docker Deployment
-Create a `Dockerfile`:
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-
-EXPOSE 8501
-
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-```
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**1. API Key Errors**
-- Ensure all required API keys are set in `.env`
-- Check API key validity and quotas
-- Verify environment variable loading
-
-**2. PDF Loading Issues**
-- Ensure `Attention.pdf` is in the root directory
-- Check file permissions
-- Verify PDF is not corrupted
-
-**3. YouTube Transcript Errors**
-- Video might not have captions available
-- Check internet connectivity
-- Verify video ID is correct
-- Ensure youtube-transcript-api is properly installed
-
-**4. Memory Issues**
-- Reduce chunk size in text splitter
-- Decrease the number of retrieved documents
-- Use smaller embedding models
-
-**5. Slow Performance**
-- Check internet connection
-- Verify API quotas and limits
-- Consider using faster models
-
-### Debug Mode
-Enable LangChain tracing for detailed debugging:
-```python
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-```
-
-## 📊 Performance Metrics
-
-### Typical Response Times
-- **System Initialization**: 30-60 seconds
-- **Question Processing**: 2-5 seconds
-- **Document Retrieval**: 0.1-0.5 seconds
-- **LLM Generation**: 1-3 seconds
-
-### Resource Usage
-- **Memory**: ~500MB-1GB depending on content size
-- **Storage**: ~50MB for vector indices
-- **API Calls**: 1 embedding + 1 LLM call per question
+### LangChain (Optional)
+1. Visit [LangSmith](https://smith.langchain.com/)
+2. Create project and get API key
+3. Add to `.env` file for debugging/tracing
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `pytest`
+5. Submit a pull request
 
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make your changes**
-4. **Add tests** (if applicable)
-5. **Commit your changes**
-   ```bash
-   git commit -m "Add your feature description"
-   ```
-6. **Push to your branch**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-7. **Create a Pull Request**
+## 📄 Documentation
 
-### Development Setup
-```bash
-# Install development dependencies
-pip install -r requirements.txt
-pip install black flake8 pytest
+- [Architecture Overview](docs/architecture.md)
+- [Deployment Guide](docs/deployment.md)
+- API Documentation (auto-generated)
 
-# Run code formatting
-black app.py
+## 📝 License
 
-# Run linting
-flake8 app.py
-
-# Run tests (if available)
-pytest
-```
-
-## 📚 References
-
-### Research Paper
-- **Title**: "Attention Is All You Need"
-- **Authors**: Ashish Vaswani, Noam Shazeer, Niki Parmar, et al.
-- **Year**: 2017
-- **Link**: [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
-
-### Technical Resources
-- [Transformer Architecture Explained](https://jalammar.github.io/illustrated-transformer/)
-- [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
-- [LangChain Documentation](https://python.langchain.com/)
-- [Streamlit Documentation](https://docs.streamlit.io/)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-- **Vaswani et al.** for the groundbreaking Attention paper
-- **OpenAI** for providing excellent embedding models
-- **Groq** for fast inference capabilities
-- **LangChain** for the RAG framework
-- **Streamlit** for the amazing web app framework
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. **Check the troubleshooting section** above
-2. **Search existing issues** in the GitHub repository
-3. **Create a new issue** with detailed information
-4. **Contact the maintainers** for urgent issues
+- Original "Attention Is All You Need" paper by Vaswani et al.
+- Streamlit for the amazing web framework
+- LangChain for RAG pipeline tools
+- OpenAI and Groq for powerful AI models
 
 ---
 
-**Made with ❤️ for the AI and NLP community**
+**Built with ❤️ for the AI community**
 
-*This RAG application demonstrates the power of combining multiple knowledge sources to create intelligent, context-aware AI assistants. Perfect for researchers, students, and practitioners interested in transformer architectures and attention mechanisms.*
+*This application demonstrates production-ready RAG implementation with modern software engineering practices suitable for enterprise deployment and technical interviews.*
